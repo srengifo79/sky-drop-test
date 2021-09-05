@@ -4,7 +4,7 @@ import { Story, Meta } from "@storybook/react";
 import ShipmentForm from "./ShipmentForm";
 
 export default {
-  title: "Location Form",
+  title: "Shipment Form",
   component: ShipmentForm,
 } as Meta;
 

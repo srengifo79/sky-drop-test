@@ -4,10 +4,10 @@ import { useForm } from "react-hook-form";
 import Button from "../../atoms/button/Button";
 import TextField from "../../atoms/input/TextField";
 import Typography from "../../atoms/typography/Typography";
-import Shipment from "../../../models/shipment";
+import ShipmentInput from "../../../models/ShipmentInput";
 
 type Props = {
-  onSubmit: (data: Shipment) => void;
+  onSubmit: (data: ShipmentInput) => void;
 };
 
 const onlyPositiveNumbers = (event: React.ChangeEvent<HTMLInputElement>) =>
@@ -22,8 +22,8 @@ const validateZipCode = (event: React.ChangeEvent<HTMLInputElement>) => {
   }
 };
 
-const LocationForm: FC<Props> = ({ onSubmit }) => {
-  const { register, handleSubmit } = useForm<Shipment>();
+const ShipmentForm: FC<Props> = ({ onSubmit }) => {
+  const { register, handleSubmit } = useForm<ShipmentInput>();
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -63,4 +63,4 @@ const LocationForm: FC<Props> = ({ onSubmit }) => {
   );
 };
 
-export default LocationForm;
+export default ShipmentForm;
