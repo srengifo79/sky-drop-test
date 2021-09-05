@@ -1,5 +1,6 @@
 enum urlConstans {
-  shipments = "/shipments"
+  shipments = "/shipments",
+  labels = "/labels",
 }
 
 export default urlConstans;
