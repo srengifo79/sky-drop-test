@@ -53,26 +53,20 @@ const ShipmentItem: FC<Props> = ({ id, serviceName, days, total }) => {
   };
 
   useEffect(() => {
+    const modalProperties: ModalProps = {
+      title: "",
+      primaryBtnText: "Aceptar",
+      description: "",
+      isOpen: true,
+    };
     if (error) {
       let errorMessage = "Ha ocurrido un error inesperado.";
       if (error.message) {
         errorMessage = error.message;
       }
-      dispatch(
-        open({
-          isOpen: true,
-          title: "Oops, ha ocurrido un error",
-          description: errorMessage,
-          primaryBtnText: "Aceptar",
-        })
-      );
+      modalProperties.title = "Oops, ha ocurrido un error";
+      modalProperties.description = errorMessage;
     } else if (data) {
-      const modalProperties: ModalProps = {
-        title: "",
-        primaryBtnText: "Aceptar",
-        description: "",
-        isOpen: true,
-      };
       if (data.data.data.attributes.status !== "ERROR") {
         modalProperties.title = "Guia creada con exito.";
         modalProperties.description =
@@ -83,8 +77,8 @@ const ShipmentItem: FC<Props> = ({ id, serviceName, days, total }) => {
         modalProperties.description =
           data.data.data.attributes.error_message![0].message;
       }
-      dispatch(open(modalProperties));
     }
+    dispatch(open(modalProperties));
   }, [data, error, dispatch]);
 
   return (
