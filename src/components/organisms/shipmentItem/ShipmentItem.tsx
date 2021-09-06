@@ -4,8 +4,8 @@ import { useHistory } from "react-router";
 
 import urlConstans from "../../../constants/urlConstants";
 import axiosInstance from "../../../services/axios";
-import Button from "../../atoms/button/Button";
-import Typography from "../../atoms/typography/Typography";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 
 type NewLabelInput = { rate_id: number; label_format: "pdf" };
 

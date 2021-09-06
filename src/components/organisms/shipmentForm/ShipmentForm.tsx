@@ -1,9 +1,9 @@
 import { FC } from "react";
 import { useForm } from "react-hook-form";
 
-import Button from "../../atoms/button/Button";
-import TextField from "../../atoms/input/TextField";
-import Typography from "../../atoms/typography/Typography";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 
 export type NewShipmentInput = {
   originPC: string;
