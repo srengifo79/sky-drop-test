@@ -1,6 +1,7 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useMutation } from "react-query";
 import axiosInstance from "../../services/axios";
+import { AxiosResponse } from "axios";
 
 import ShipmentForm, {
   NewShipmentInput,
@@ -9,7 +10,8 @@ import urlConstans from "../../constants/urlConstants";
 import createShipmentBody from "../../mocks/createShipmentBody";
 import ShipmentList from "../../components/organisms/shipmentsList/ShipmentList";
 import CustomModal from "../../components/molecules/customModal/CustomModal";
-import { useAppSelector } from "../../hooks/reduxHooks";
+import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
+import { open } from "../../redux/slices/modalSlice";
 
 type NewShipmentBody = {
   address_from: {
@@ -49,34 +51,55 @@ type NewShipmentBody = {
 };
 
 const Landing: FC = () => {
-  const modalIsOpen = useAppSelector((state) => state.isOpen);
-  const modalPdfLink = useAppSelector((state) => state.pdfGuideLink);
+  const modalProperties = useAppSelector((state) => state);
+  const dispatch = useAppDispatch();
 
-  const { mutate, data } = useMutation((newShipment: NewShipmentBody) =>
+  const { mutate, data, error } = useMutation<
+    AxiosResponse,
+    Error,
+    NewShipmentBody
+  >((newShipment: NewShipmentBody) =>
     axiosInstance.post(urlConstans.shipments, newShipment)
   );
 
-  const handleShipmentSubmit = (data: NewShipmentInput) => {
+  const handleShipmentSubmit = (formData: NewShipmentInput) => {
     const newShipment = { ...createShipmentBody };
 
-    newShipment.address_from.zip = data.originPC;
-    newShipment.address_to.zip = data.destinationPC;
+    newShipment.address_from.zip = formData.originPC;
+    newShipment.address_to.zip = formData.destinationPC;
 
-    newShipment.parcels[0].width = parseInt(data.width);
-    newShipment.parcels[0].height = parseInt(data.height);
-    newShipment.parcels[0].length = parseInt(data.length);
+    newShipment.parcels[0].width = parseInt(formData.width);
+    newShipment.parcels[0].height = parseInt(formData.height);
+    newShipment.parcels[0].length = parseInt(formData.length);
 
     mutate(newShipment);
   };
 
+  useEffect(() => {
+    if (error) {
+      let errorMessage = "Ha ocurrido un error inesperado.";
+      if (error.message) {
+        errorMessage = error.message;
+      }
+      dispatch(
+        open({
+          isOpen: true,
+          title: "Oops, ha ocurrido un error",
+          description: errorMessage,
+          primaryBtnText: "Aceptar",
+        })
+      );
+    }
+  }, [error, dispatch]);
+
   return (
     <>
       <CustomModal
-        isOpen={modalIsOpen}
-        title="Guia creada"
-        description="Descripcion"
-        primaryBtnText="Aceptar"
-        pdfGuideLink={modalPdfLink}
+        isOpen={modalProperties.isOpen}
+        title={modalProperties.title}
+        description={modalProperties.description}
+        primaryBtnText={modalProperties.primaryBtnText}
+        pdfGuideLink={modalProperties.pdfGuideLink}
       />
       <ShipmentForm onSubmit={handleShipmentSubmit} />
       <ShipmentList shipments={data?.data.included.slice(1) || []} />
