@@ -1,11 +1,12 @@
 import { FC, useEffect } from "react";
 import { useMutation } from "react-query";
-import { useHistory } from "react-router";
 
 import urlConstans from "../../../constants/urlConstants";
 import axiosInstance from "../../../services/axios";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import { useAppDispatch } from "../../../hooks/reduxHooks";
+import { open } from "../../../redux/slices/modalSlice";
 
 type NewLabelInput = { rate_id: number; label_format: "pdf" };
 
@@ -34,7 +35,7 @@ export type Props = {
 };
 
 const ShipmentItem: FC<Props> = ({ id, serviceName, days, total }) => {
-  const history = useHistory();
+  const dispatch = useAppDispatch();
 
   const { mutate, data, error } = useMutation((newLabel: NewLabelInput) =>
     axiosInstance.post<NewLabelReponse>(urlConstans.labels, newLabel)
@@ -47,12 +48,21 @@ const ShipmentItem: FC<Props> = ({ id, serviceName, days, total }) => {
   useEffect(() => {
     if (!error && data) {
       if (data.data.data.attributes.status !== "ERROR") {
-        history.replace(data.data.data.attributes.label_url);
+        dispatch(
+          open({
+            title: "Guia creada con exito.",
+            primaryBtnText: "Aceptar",
+            description:
+              "Para revisar su guia de click en el siguiente enlace: ",
+            pdfGuideLink: data.data.data.attributes.label_url,
+            isOpen: true,
+          })
+        );
       } else {
         alert("error");
       }
     }
-  }, [data, error, history]);
+  }, [data, error, dispatch]);
 
   return (
     <div>
