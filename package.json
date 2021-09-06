@@ -73,7 +73,9 @@
       "!**/node_modules/**",
       "!**/*index.tsx",
       "!**/*App.tsx",
-      "!**/*reportWebVitals.ts"
+      "!**/*reportWebVitals.ts",
+      "!**/redux/**",
+      "!**/mocks/**"
     ]
   }
 }
