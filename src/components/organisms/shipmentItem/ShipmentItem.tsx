@@ -87,7 +87,7 @@ const ShipmentItem: FC<Props> = ({ id, serviceName, days, total }) => {
       <Typography>{days}</Typography>
       <Typography>{total}</Typography>
       <Button onClick={handleShipmentSelect} variant="contained">
-        Select
+        Seleccionar Servicio
       </Button>
     </div>
   );
