@@ -1,6 +1,7 @@
 import { FC, useEffect } from "react";
 import { useMutation } from "react-query";
 import { AxiosResponse } from "axios";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 import urlConstans from "../../../constants/urlConstants";
 import axiosInstance from "../../../services/axios";
@@ -9,6 +10,21 @@ import Typography from "@material-ui/core/Typography";
 import { useAppDispatch } from "../../../hooks/reduxHooks";
 import { open } from "../../../redux/slices/modalSlice";
 import { Props as ModalProps } from "../../molecules/customModal/CustomModal";
+import { Grid } from "@material-ui/core";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      padding: "5%",
+      borderRadius: "8px",
+      boxShadow: `0px 0px 3px ${theme.palette.text.hint}`,
+      backgroundColor: theme.palette.primary.main,
+    },
+    text: {
+      color: theme.palette.primary.contrastText,
+    },
+  })
+);
 
 type NewLabelInput = { rate_id: number; label_format: "pdf" };
 
@@ -38,6 +54,10 @@ export type Props = {
 };
 
 const ShipmentItem: FC<Props> = ({ id, serviceName, days, total }) => {
+  const styles = useStyles({
+    serviceName,
+  });
+
   const dispatch = useAppDispatch();
 
   const { mutate, data, error } = useMutation<
@@ -82,13 +102,31 @@ const ShipmentItem: FC<Props> = ({ id, serviceName, days, total }) => {
   }, [data, error, dispatch]);
 
   return (
-    <div>
-      <Typography>{serviceName}</Typography>
-      <Typography>{days}</Typography>
-      <Typography>{total}</Typography>
-      <Button onClick={handleShipmentSelect} variant="contained">
-        Seleccionar Servicio
-      </Button>
+    <div className={styles.container}>
+      <Grid container spacing={3} direction="column">
+        <Grid item>
+          <Grid container spacing={1} direction="column">
+            <Grid item>
+              <Typography variant="h6" className={styles.text}>
+                Nombre: {serviceName}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography className={styles.text}>
+                Tu paquete llegaria en: {days} dias
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography className={styles.text}>Total: ${total}</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Button onClick={handleShipmentSelect} variant="contained">
+            Seleccionar
+          </Button>
+        </Grid>
+      </Grid>
     </div>
   );
 };

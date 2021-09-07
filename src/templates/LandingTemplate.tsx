@@ -1,5 +1,6 @@
 import { Grid } from "@material-ui/core";
 import { FC } from "react";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 import CustomModal, {
   Props as ModalProps,
@@ -12,6 +13,14 @@ import ShipmentList, {
 } from "../components/organisms/shipmentsList/ShipmentList";
 import createShipmentResponse from "../mocks/createShipmentResponse";
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      backgroundColor: theme.palette.secondary.main,
+    },
+  })
+);
+
 export type Props = {
   modalProperties: ModalProps;
   handleShipmentSubmit: (data: NewShipmentInput) => void;
@@ -23,6 +32,8 @@ const LandingTemplate: FC<Props> = ({
   handleShipmentSubmit,
   shipments,
 }) => {
+  const styles = useStyles();
+
   return (
     <>
       <CustomModal
@@ -32,14 +43,18 @@ const LandingTemplate: FC<Props> = ({
         primaryBtnText={modalProperties.primaryBtnText}
         pdfGuideLink={modalProperties.pdfGuideLink}
       />
-      <Grid container direction="column">
-        <Grid item>
-          <ShipmentForm onSubmit={handleShipmentSubmit} />
+      <div className={styles.container}>
+        <Grid container direction="column">
+          <Grid item>
+            <ShipmentForm onSubmit={handleShipmentSubmit} />
+          </Grid>
+          <Grid item>
+            <ShipmentList
+              shipments={createShipmentResponse.included.slice(1)}
+            />
+          </Grid>
         </Grid>
-        <Grid item>
-          <ShipmentList shipments={createShipmentResponse.included.slice(1)} />
-        </Grid>
-      </Grid>
+      </div>
     </>
   );
 };
