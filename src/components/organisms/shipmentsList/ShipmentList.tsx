@@ -1,10 +1,7 @@
 import { FC } from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
 
 import ShipmentItem from "../shipmentItem/ShipmentItem";
-
-const useStyles = makeStyles((theme: Theme) => createStyles({}));
 
 export type ShipmentRate = {
   id: string;
@@ -56,7 +53,6 @@ const sortShipments = (shipments: Array<ShipmentRate>) => {
 };
 
 const ShipmentList: FC<Props> = ({ shipments }) => {
-  const styles = useStyles();
   return (
     <Grid container spacing={5} justifyContent="center">
       {shipments.length > 0 &&
