@@ -1,3 +1,4 @@
+import { Grid } from "@material-ui/core";
 import { FC } from "react";
 
 import CustomModal, {
@@ -9,6 +10,7 @@ import ShipmentForm, {
 import ShipmentList, {
   ShipmentRate,
 } from "../components/organisms/shipmentsList/ShipmentList";
+import createShipmentResponse from "../mocks/createShipmentResponse";
 
 export type Props = {
   modalProperties: ModalProps;
@@ -30,8 +32,14 @@ const LandingTemplate: FC<Props> = ({
         primaryBtnText={modalProperties.primaryBtnText}
         pdfGuideLink={modalProperties.pdfGuideLink}
       />
-      <ShipmentForm onSubmit={handleShipmentSubmit} />
-      <ShipmentList shipments={shipments} />
+      <Grid container spacing={5} direction="column">
+        <Grid item>
+          <ShipmentForm onSubmit={handleShipmentSubmit} />
+        </Grid>
+        <Grid item>
+          <ShipmentList shipments={createShipmentResponse.included.slice(1)} />
+        </Grid>
+      </Grid>
     </>
   );
 };
