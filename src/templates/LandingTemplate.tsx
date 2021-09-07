@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       backgroundColor: theme.palette.secondary.main,
+      height: "100vh",
     },
   })
 );
@@ -49,9 +50,7 @@ const LandingTemplate: FC<Props> = ({
             <ShipmentForm onSubmit={handleShipmentSubmit} />
           </Grid>
           <Grid item>
-            <ShipmentList
-              shipments={createShipmentResponse.included.slice(1)}
-            />
+            <ShipmentList shipments={shipments} />
           </Grid>
         </Grid>
       </div>
