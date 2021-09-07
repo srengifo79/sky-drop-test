@@ -1,7 +1,7 @@
 import React from "react";
 import ShipmentItem from "../shipmentItem/ShipmentItem";
 
-type ShipmentRate = {
+export type ShipmentRate = {
   id: string;
   type: string;
   attributes: {

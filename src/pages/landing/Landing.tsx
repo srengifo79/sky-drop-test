@@ -1,17 +1,14 @@
 import { FC, useEffect } from "react";
 import { useMutation } from "react-query";
-import axiosInstance from "../../services/axios";
 import { AxiosResponse } from "axios";
 
-import ShipmentForm, {
-  NewShipmentInput,
-} from "../../components/organisms/shipmentForm/ShipmentForm";
+import { NewShipmentInput } from "../../components/organisms/shipmentForm/ShipmentForm";
 import urlConstans from "../../constants/urlConstants";
 import createShipmentBody from "../../mocks/createShipmentBody";
-import ShipmentList from "../../components/organisms/shipmentsList/ShipmentList";
-import CustomModal from "../../components/molecules/customModal/CustomModal";
 import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { open } from "../../redux/slices/modalSlice";
+import LandingTemplate from "../../templates/LandingTemplate";
+import axiosInstance from "../../services/axios";
 
 type NewShipmentBody = {
   address_from: {
@@ -93,17 +90,11 @@ const Landing: FC = () => {
   }, [error, dispatch]);
 
   return (
-    <>
-      <CustomModal
-        isOpen={modalProperties.isOpen}
-        title={modalProperties.title}
-        description={modalProperties.description}
-        primaryBtnText={modalProperties.primaryBtnText}
-        pdfGuideLink={modalProperties.pdfGuideLink}
-      />
-      <ShipmentForm onSubmit={handleShipmentSubmit} />
-      <ShipmentList shipments={data?.data.included.slice(1) || []} />
-    </>
+    <LandingTemplate
+      modalProperties={modalProperties}
+      handleShipmentSubmit={handleShipmentSubmit}
+      shipments={data?.data.included.slice(1) || []}
+    />
   );
 };
 
