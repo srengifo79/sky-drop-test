@@ -7,6 +7,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       overflow: "hidden",
+      backgroundColor: theme.palette.secondary.main,
     },
     gridStyle: {
       width: "auto",
@@ -75,7 +76,7 @@ const ShipmentList: FC<Props> = ({ shipments }) => {
         className={styles.gridStyle}
       >
         {shipments.length > 0 &&
-          sortShipments(shipments).map(({ attributes, id }) => (
+          sortShipments(shipments).map(({ attributes, id }, index) => (
             <Grid item lg={4}>
               <ShipmentItem
                 key={id}
@@ -83,6 +84,7 @@ const ShipmentList: FC<Props> = ({ shipments }) => {
                 serviceName={attributes.service_level_name || ""}
                 days={attributes.days || 0}
                 total={attributes.total_pricing || ""}
+                variant={index === 0 ? "important" : "normal"}
               />
             </Grid>
           ))}

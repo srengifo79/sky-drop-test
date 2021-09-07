@@ -14,7 +14,7 @@ import { Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    container: {
+    containerNormal: {
       padding: "5%",
       borderRadius: "8px",
       boxShadow: `0px 0px 3px ${theme.palette.text.hint}`,
@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
     text: {
       color: theme.palette.primary.contrastText,
     },
+    containerImportant: { backgroundColor: theme.palette.secondary.dark },
   })
 );
 
@@ -51,9 +52,10 @@ export type Props = {
   serviceName: string;
   days: number;
   total: string;
+  variant: "important" | "normal";
 };
 
-const ShipmentItem: FC<Props> = ({ id, serviceName, days, total }) => {
+const ShipmentItem: FC<Props> = ({ id, serviceName, days, total, variant }) => {
   const styles = useStyles({
     serviceName,
   });
@@ -102,7 +104,11 @@ const ShipmentItem: FC<Props> = ({ id, serviceName, days, total }) => {
   }, [data, error, dispatch]);
 
   return (
-    <div className={styles.container}>
+    <div
+      className={`${styles.containerNormal} ${
+        variant === "important" ? styles.containerImportant : ""
+      }`}
+    >
       <Grid container spacing={3} direction="column">
         <Grid item>
           <Grid container spacing={1} direction="column">

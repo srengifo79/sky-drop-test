@@ -11,7 +11,6 @@ import ShipmentForm, {
 import ShipmentList, {
   ShipmentRate,
 } from "../components/organisms/shipmentsList/ShipmentList";
-import createShipmentResponse from "../mocks/createShipmentResponse";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
