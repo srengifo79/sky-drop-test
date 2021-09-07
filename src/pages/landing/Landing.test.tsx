@@ -56,7 +56,7 @@ test("Submit new shipment & select service", async () => {
     data: createLabelResponse,
   });
 
-  const selectButton = screen.getAllByText("Seleccionar Servicio");
+  const selectButton = screen.getAllByText("Seleccionar");
 
   userEvent.click(selectButton[0]);
 

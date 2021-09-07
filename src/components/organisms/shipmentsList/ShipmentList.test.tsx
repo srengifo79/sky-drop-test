@@ -14,21 +14,28 @@ test("Renders props", () => {
 
   props.shipments.forEach((service) => {
     const listItemNames = screen.getAllByText(
-      service.attributes.service_level_name!
+      service.attributes.service_level_name!,
+      { exact: false }
     );
 
     listItemNames.forEach((item) => {
       expect(item).toBeInTheDocument();
     });
 
-    const listItemDays = screen.getAllByText(service.attributes.days!);
+    const listItemDays = screen.getAllByText(
+      `Tu paquete llegaria en: ${service.attributes.days!}`,
+      {
+        exact: false,
+      }
+    );
 
     listItemDays.forEach((item) => {
       expect(item).toBeInTheDocument();
     });
 
     const listItemTotal = screen.getAllByText(
-      service.attributes.total_pricing!
+      service.attributes.total_pricing!,
+      { exact: false }
     );
 
     listItemTotal.forEach((item) => {

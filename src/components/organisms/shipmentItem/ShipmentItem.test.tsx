@@ -19,6 +19,7 @@ const props: ShipmentItemProps = {
   days: 3,
   serviceName: "Fedex",
   total: "12.32",
+  variant: "important",
 };
 
 jest.mock("../../../services/axios");
@@ -29,14 +30,16 @@ const spy = jest.spyOn(store, "dispatch");
 test("Renders props", () => {
   render(<ShipmentItem {...props} />, { wrapper: Wrappers });
 
-  const serviceName = screen.getByText(props.serviceName);
-  expect(serviceName).toHaveTextContent(props.serviceName);
+  const serviceName = screen.getByText(props.serviceName, { exact: false });
+  expect(serviceName).toBeInTheDocument();
 
-  const days = screen.getByText(props.days);
-  expect(days).toHaveTextContent(String(props.days));
+  const days = screen.getByText(`Tu paquete llegaria en: ${props.days}`, {
+    exact: false,
+  });
+  expect(days).toBeInTheDocument();
 
-  const totalText = screen.getByText(props.total);
-  expect(totalText).toHaveTextContent(props.total);
+  const totalText = screen.getByText(props.total, { exact: false });
+  expect(totalText).toBeInTheDocument();
 });
 
 test("Handle item select success", async () => {
@@ -46,7 +49,7 @@ test("Handle item select success", async () => {
 
   render(<ShipmentItem {...props} />, { wrapper: Wrappers });
 
-  const selectButton = screen.getByText("Seleccionar Servicio");
+  const selectButton = screen.getByText("Seleccionar");
 
   userEvent.click(selectButton);
 
@@ -77,7 +80,7 @@ test("Handle item select success with status Error", async () => {
 
   render(<ShipmentItem {...props} />, { wrapper: Wrappers });
 
-  const selectButton = screen.getByText("Seleccionar Servicio");
+  const selectButton = screen.getByText("Seleccionar");
 
   userEvent.click(selectButton);
 
@@ -103,7 +106,7 @@ test("Handle Error response", async () => {
 
   render(<ShipmentItem {...props} />, { wrapper: Wrappers });
 
-  const selectButton = screen.getByText("Seleccionar Servicio");
+  const selectButton = screen.getByText("Seleccionar");
 
   userEvent.click(selectButton);
 

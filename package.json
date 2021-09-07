@@ -75,7 +75,8 @@
       "!**/*App.tsx",
       "!**/*reportWebVitals.ts",
       "!**/redux/**",
-      "!**/mocks/**"
+      "!**/mocks/**",
+      "!**/assets/**"
     ]
   }
 }
