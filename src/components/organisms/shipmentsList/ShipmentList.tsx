@@ -1,7 +1,19 @@
 import { FC } from "react";
-import { Grid } from "@material-ui/core";
+import { createStyles, Grid, makeStyles, Theme } from "@material-ui/core";
 
 import ShipmentItem from "../shipmentItem/ShipmentItem";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    container: {
+      overflow: "hidden",
+    },
+    gridStyle: {
+      width: "auto",
+      margin: "auto",
+    },
+  })
+);
 
 export type ShipmentRate = {
   id: string;
@@ -53,21 +65,29 @@ const sortShipments = (shipments: Array<ShipmentRate>) => {
 };
 
 const ShipmentList: FC<Props> = ({ shipments }) => {
+  const styles = useStyles();
   return (
-    <Grid container spacing={5} justifyContent="center">
-      {shipments.length > 0 &&
-        sortShipments(shipments).map(({ attributes, id }) => (
-          <Grid item>
-            <ShipmentItem
-              key={id}
-              id={parseInt(id)}
-              serviceName={attributes.service_level_name || ""}
-              days={attributes.days || 0}
-              total={attributes.total_pricing || ""}
-            />
-          </Grid>
-        ))}
-    </Grid>
+    <div className={styles.container}>
+      <Grid
+        container
+        spacing={5}
+        justifyContent="center"
+        className={styles.gridStyle}
+      >
+        {shipments.length > 0 &&
+          sortShipments(shipments).map(({ attributes, id }) => (
+            <Grid item lg={4}>
+              <ShipmentItem
+                key={id}
+                id={parseInt(id)}
+                serviceName={attributes.service_level_name || ""}
+                days={attributes.days || 0}
+                total={attributes.total_pricing || ""}
+              />
+            </Grid>
+          ))}
+      </Grid>
+    </div>
   );
 };
 

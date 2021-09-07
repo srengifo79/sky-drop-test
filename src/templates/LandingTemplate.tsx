@@ -32,7 +32,7 @@ const LandingTemplate: FC<Props> = ({
         primaryBtnText={modalProperties.primaryBtnText}
         pdfGuideLink={modalProperties.pdfGuideLink}
       />
-      <Grid container spacing={2} direction="column">
+      <Grid container direction="column">
         <Grid item>
           <ShipmentForm onSubmit={handleShipmentSubmit} />
         </Grid>
