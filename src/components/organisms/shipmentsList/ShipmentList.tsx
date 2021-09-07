@@ -1,5 +1,10 @@
-import React from "react";
+import { FC } from "react";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { Grid } from "@material-ui/core";
+
 import ShipmentItem from "../shipmentItem/ShipmentItem";
+
+const useStyles = makeStyles((theme: Theme) => createStyles({}));
 
 export type ShipmentRate = {
   id: string;
@@ -50,20 +55,23 @@ const sortShipments = (shipments: Array<ShipmentRate>) => {
   return shipments;
 };
 
-const ShipmentList = ({ shipments }: Props) => {
+const ShipmentList: FC<Props> = ({ shipments }) => {
+  const styles = useStyles();
   return (
-    <div>
+    <Grid container spacing={5} justifyContent="center">
       {shipments.length > 0 &&
         sortShipments(shipments).map(({ attributes, id }) => (
-          <ShipmentItem
-            key={id}
-            id={parseInt(id)}
-            serviceName={attributes.service_level_name || ""}
-            days={attributes.days || 0}
-            total={attributes.total_pricing || ""}
-          />
+          <Grid item>
+            <ShipmentItem
+              key={id}
+              id={parseInt(id)}
+              serviceName={attributes.service_level_name || ""}
+              days={attributes.days || 0}
+              total={attributes.total_pricing || ""}
+            />
+          </Grid>
         ))}
-    </div>
+    </Grid>
   );
 };
 
