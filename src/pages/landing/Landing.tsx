@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks/reduxHooks";
 import { open } from "../../redux/slices/modalSlice";
 import LandingTemplate from "../../templates/LandingTemplate";
 import axiosInstance from "../../services/axios";
+import { finishLoading, startLoading } from "../../redux/slices/loaderSlice";
 
 type NewShipmentBody = {
   address_from: {
@@ -48,10 +49,10 @@ type NewShipmentBody = {
 };
 
 const Landing: FC = () => {
-  const modalProperties = useAppSelector((state) => state);
+  const { modal: modalProperties, loader } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
 
-  const { mutate, data, error } = useMutation<
+  const { mutate, data, error, isLoading } = useMutation<
     AxiosResponse,
     Error,
     NewShipmentBody
@@ -89,11 +90,22 @@ const Landing: FC = () => {
     }
   }, [error, dispatch]);
 
+  useEffect(() => {
+    let functionToDispatch;
+    if (isLoading) {
+      functionToDispatch = startLoading;
+    } else {
+      functionToDispatch = finishLoading;
+    }
+    dispatch(functionToDispatch());
+  }, [isLoading, dispatch]);
+
   return (
     <LandingTemplate
       modalProperties={modalProperties}
       handleShipmentSubmit={handleShipmentSubmit}
       shipments={data?.data.included.slice(1) || []}
+      isLoading={loader.isLoading}
     />
   );
 };

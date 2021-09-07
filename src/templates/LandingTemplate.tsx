@@ -11,6 +11,7 @@ import ShipmentForm, {
 import ShipmentList, {
   ShipmentRate,
 } from "../components/organisms/shipmentsList/ShipmentList";
+import CustomLoader from "../components/molecules/customLoader/CustomLoader";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,17 +26,20 @@ export type Props = {
   modalProperties: ModalProps;
   handleShipmentSubmit: (data: NewShipmentInput) => void;
   shipments: Array<ShipmentRate>;
+  isLoading: boolean;
 };
 
 const LandingTemplate: FC<Props> = ({
   modalProperties,
   handleShipmentSubmit,
   shipments,
+  isLoading,
 }) => {
   const styles = useStyles();
 
   return (
     <>
+      <CustomLoader isLoading={isLoading} />
       <CustomModal
         isOpen={modalProperties.isOpen}
         title={modalProperties.title}

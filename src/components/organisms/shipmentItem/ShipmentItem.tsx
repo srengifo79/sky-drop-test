@@ -11,6 +11,7 @@ import { useAppDispatch } from "../../../hooks/reduxHooks";
 import { open } from "../../../redux/slices/modalSlice";
 import { Props as ModalProps } from "../../molecules/customModal/CustomModal";
 import { Grid } from "@material-ui/core";
+import { finishLoading, startLoading } from "../../../redux/slices/loaderSlice";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -62,7 +63,7 @@ const ShipmentItem: FC<Props> = ({ id, serviceName, days, total, variant }) => {
 
   const dispatch = useAppDispatch();
 
-  const { mutate, data, error } = useMutation<
+  const { mutate, data, error, isLoading } = useMutation<
     AxiosResponse<NewLabelReponse>,
     Error,
     NewLabelInput
@@ -81,14 +82,7 @@ const ShipmentItem: FC<Props> = ({ id, serviceName, days, total, variant }) => {
       description: "",
       isOpen: true,
     };
-    if (error) {
-      let errorMessage = "Ha ocurrido un error inesperado.";
-      if (error.message) {
-        errorMessage = error.message;
-      }
-      modalProperties.title = "Oops, ha ocurrido un error";
-      modalProperties.description = errorMessage;
-    } else if (data) {
+    if (data) {
       if (data.data.data.attributes.status !== "ERROR") {
         modalProperties.title = "Guia creada con exito.";
         modalProperties.description =
@@ -99,9 +93,28 @@ const ShipmentItem: FC<Props> = ({ id, serviceName, days, total, variant }) => {
         modalProperties.description =
           data.data.data.attributes.error_message![0].message;
       }
+      dispatch(open(modalProperties));
+    } else if (error) {
+      let errorMessage = "Ha ocurrido un error inesperado.";
+      if (error.message) {
+        errorMessage = error.message;
+      }
+      modalProperties.title = "Oops, ha ocurrido un error";
+      modalProperties.description = errorMessage;
+
+      dispatch(open(modalProperties));
     }
-    dispatch(open(modalProperties));
   }, [data, error, dispatch]);
+
+  useEffect(() => {
+    let functionToDispatch;
+    if (isLoading) {
+      functionToDispatch = startLoading;
+    } else {
+      functionToDispatch = finishLoading;
+    }
+    dispatch(functionToDispatch());
+  }, [isLoading, dispatch]);
 
   return (
     <div
