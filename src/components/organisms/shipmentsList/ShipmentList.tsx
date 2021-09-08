@@ -110,7 +110,7 @@ const ShipmentList: FC<Props> = ({ shipments }) => {
           <CustomSlider
             min={minPrice}
             max={maxPrice}
-            label="Rando de precios"
+            label="Rango de precios"
             onChange={hanldePriceRangeChange}
           />
         </Grid>
