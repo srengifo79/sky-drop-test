@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.secondary,
     },
     sliderContainer: {
+      width: "100%",
       display: "table",
       minHeight: "70px",
     },
@@ -75,7 +76,7 @@ const CustomSlider: FC<Props> = ({ min, max, label, onChange }) => {
               min={min}
               max={max}
               style={{
-                minWidth: "300px",
+                width: "100%",
                 display: "table-cell",
                 verticalAlign: "bottom",
               }}
