@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 
 import ShipmentList, { Props as ShipmentListProps } from "./ShipmentList";
 import createShipmentResponse from "../../../mocks/createShipmentResponse";
@@ -42,4 +42,12 @@ test("Renders props", () => {
       expect(item).toBeInTheDocument();
     });
   });
+});
+
+test("Change ranges", () => {
+  render(<ShipmentList {...props} />, { wrapper: Wrappers });
+
+  const sliders = screen.getAllByRole("slider");
+
+  fireEvent.mouseDown(sliders[0], { clientX: 162, clientY: 302 });
 });
