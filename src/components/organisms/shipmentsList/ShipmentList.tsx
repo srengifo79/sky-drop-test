@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { createStyles, Grid, makeStyles, Theme } from "@material-ui/core";
 
 import ShipmentItem from "../shipmentItem/ShipmentItem";
@@ -88,10 +88,13 @@ const shipmentsRanges = (shipments: Array<ShipmentRate>) => {
 };
 
 const ShipmentList: FC<Props> = ({ shipments }) => {
-  const { maxPrice, minPrice, maxDays, minDays } = shipmentsRanges(shipments);
+  const { maxPrice, minPrice, maxDays, minDays } = useMemo(
+    () => shipmentsRanges(shipments),
+    [shipments]
+  );
 
-  const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
-  const [daysRange, setDaysRange] = useState([minDays, maxDays]);
+  const [priceRange, setPriceRange] = useState([0, 0]);
+  const [daysRange, setDaysRange] = useState([0, 0]);
 
   const styles = useStyles();
 
@@ -102,6 +105,11 @@ const ShipmentList: FC<Props> = ({ shipments }) => {
   const hanldeDaysRangeChange = (start: number, end: number) => {
     setDaysRange([start, end]);
   };
+
+  useEffect(() => {
+    setPriceRange([minPrice, maxPrice]);
+    setDaysRange([minDays, maxDays]);
+  }, [shipments]);
 
   return (
     <div className={styles.container}>

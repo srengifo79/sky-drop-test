@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import Landing from "./Landing";
 import Wrappers from "../../mocks/Wrappers";
 import userEvent from "@testing-library/user-event";
@@ -38,14 +38,14 @@ test("Submit new shipment & select service", async () => {
   const widthInput = formInputs[4];
   userEvent.type(widthInput, "10");
 
-  mockedAxios.post.mockResolvedValueOnce({
+  mockedAxios.post.mockResolvedValue({
     data: { ...createShipmentResponse },
   });
 
   const submitButton = screen.getByText("Crear envío");
   userEvent.click(submitButton);
 
-  await flushPromises();
+  await waitFor(() => screen.findAllByText("Seleccionar"));
 
   expect(mockedAxios.post).toHaveBeenCalledWith(
     urlConstans.shipments,
