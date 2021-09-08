@@ -1,5 +1,5 @@
-import { FC, useEffect } from "react";
-import { useMutation } from "react-query";
+import { FC, useEffect, useState } from "react";
+import { useMutation, useQuery } from "react-query";
 import { AxiosResponse } from "axios";
 
 import { NewShipmentInput } from "../../components/organisms/shipmentForm/ShipmentForm";
@@ -49,6 +49,7 @@ type NewShipmentBody = {
 };
 
 const Landing: FC = () => {
+  const [activeView, setActiveView] = useState(true);
   const { modal: modalProperties, loader } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
 
@@ -60,7 +61,18 @@ const Landing: FC = () => {
     axiosInstance.post(urlConstans.shipments, newShipment)
   );
 
+  const {
+    data: labelsData,
+    error: labelsError,
+    isLoading: labelsIsloading,
+  } = useQuery<AxiosResponse, Error>(
+    ["labels", activeView],
+    () => axiosInstance.get(urlConstans.labels),
+    { enabled: !activeView }
+  );
+
   const handleShipmentSubmit = (formData: NewShipmentInput) => {
+    setActiveView(true);
     const newShipment = { ...createShipmentBody };
 
     newShipment.address_from.zip = formData.originPC;
@@ -74,10 +86,13 @@ const Landing: FC = () => {
   };
 
   useEffect(() => {
-    if (error) {
+    if (error || labelsError) {
       let errorMessage = "Ha ocurrido un error inesperado.";
-      if (error.message) {
+      if (error?.message) {
         errorMessage = error.message;
+      }
+      if (labelsError?.message) {
+        errorMessage = labelsError.message;
       }
       dispatch(
         open({
@@ -88,24 +103,27 @@ const Landing: FC = () => {
         })
       );
     }
-  }, [error, dispatch]);
+  }, [error, labelsError, dispatch]);
 
   useEffect(() => {
     let functionToDispatch;
-    if (isLoading) {
+    if (isLoading || labelsIsloading) {
       functionToDispatch = startLoading;
     } else {
       functionToDispatch = finishLoading;
     }
     dispatch(functionToDispatch());
-  }, [isLoading, dispatch]);
+  }, [isLoading, labelsIsloading, dispatch]);
 
   return (
     <LandingTemplate
       modalProperties={modalProperties}
       handleShipmentSubmit={handleShipmentSubmit}
       shipments={data?.data.included.slice(1) || []}
+      labels={labelsData?.data.data || []}
       isLoading={loader.isLoading}
+      activeView={activeView}
+      onSecondaryClick={() => setActiveView(false)}
     />
   );
 };

@@ -100,3 +100,12 @@ test("Error on create shipment", async () => {
 
   await flushPromises();
 });
+
+test("See labels click", async () => {
+  render(<Landing />, { wrapper: Wrappers });
+
+  const submitButton = screen.getByText("Ver envios creados");
+  userEvent.click(submitButton);
+
+  await flushPromises();
+});

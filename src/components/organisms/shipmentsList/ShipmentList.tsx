@@ -112,59 +112,62 @@ const ShipmentList: FC<Props> = ({ shipments }) => {
   }, [maxDays, maxPrice, minDays, minPrice]);
 
   return (
-    <div className={styles.container}>
-      <Grid container direction="column" justifyContent="center">
-        <Grid item>
-          <CustomSlider
-            min={minPrice}
-            max={maxPrice}
-            label="Rango de precios"
-            onChange={hanldePriceRangeChange}
-          />
-        </Grid>
-        <Grid item>
-          <CustomSlider
-            min={minDays}
-            max={maxDays}
-            label="Rando de dias de entrega"
-            onChange={hanldeDaysRangeChange}
-          />
-        </Grid>
-        <Grid item>
-          <Grid
-            container
-            spacing={5}
-            justifyContent="center"
-            className={styles.gridStyle}
-          >
-            {shipments.length > 0 &&
-              sortShipments(shipments)
-                .filter(({ attributes }) => {
-                  const price = parseInt(attributes.total_pricing || "0");
-                  const days = attributes.days || 0;
+    <>
+      {shipments.length > 0 && (
+        <div className={styles.container}>
+          <Grid container direction="column" justifyContent="center">
+            <Grid item>
+              <CustomSlider
+                min={minPrice}
+                max={maxPrice}
+                label="Rango de precios"
+                onChange={hanldePriceRangeChange}
+              />
+            </Grid>
+            <Grid item>
+              <CustomSlider
+                min={minDays}
+                max={maxDays}
+                label="Rando de dias de entrega"
+                onChange={hanldeDaysRangeChange}
+              />
+            </Grid>
+            <Grid item>
+              <Grid
+                container
+                spacing={5}
+                justifyContent="center"
+                className={styles.gridStyle}
+              >
+                {sortShipments(shipments)
+                  .filter(({ attributes }) => {
+                    const price = parseInt(attributes.total_pricing || "0");
+                    const days = attributes.days || 0;
 
-                  return (
-                    priceRange[0] <= price &&
-                    priceRange[1] >= price &&
-                    daysRange[0] <= days &&
-                    daysRange[1] >= days
-                  );
-                })
-                .map(({ attributes, id }, index) => (
-                  <Grid item lg={4} key={id}>
-                    <ShipmentItem
-                      id={parseInt(id)}
-                      serviceName={attributes.service_level_name || ""}
-                      days={attributes.days || 0}
-                      total={attributes.total_pricing || ""}
-                      variant={index === 0 ? "important" : "normal"}
-                    />
-                  </Grid>
-                ))}
+                    return (
+                      priceRange[0] <= price &&
+                      priceRange[1] >= price &&
+                      daysRange[0] <= days &&
+                      daysRange[1] >= days
+                    );
+                  })
+                  .map(({ attributes, id }, index) => (
+                    <Grid item lg={4} key={id}>
+                      <ShipmentItem
+                        id={parseInt(id)}
+                        serviceName={attributes.service_level_name || ""}
+                        days={attributes.days || 0}
+                        total={attributes.total_pricing || ""}
+                        variant={index === 0 ? "important" : "normal"}
+                      />
+                    </Grid>
+                  ))}
+              </Grid>
+            </Grid>
           </Grid>
-        </Grid>
-      </Grid>
-    </div>
+        </div>
+      )}
+    </>
   );
 };
 

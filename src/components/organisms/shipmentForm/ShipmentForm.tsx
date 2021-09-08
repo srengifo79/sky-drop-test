@@ -43,6 +43,7 @@ export type NewShipmentInput = {
 
 export type Props = {
   onSubmit: (data: NewShipmentInput) => void;
+  onClickSecondary?: () => void;
 };
 
 const onlyPositiveNumbers = (event: React.ChangeEvent<HTMLInputElement>) =>
@@ -57,7 +58,7 @@ const validateZipCode = (event: React.ChangeEvent<HTMLInputElement>) => {
   }
 };
 
-const ShipmentForm: FC<Props> = ({ onSubmit }) => {
+const ShipmentForm: FC<Props> = ({ onSubmit, onClickSecondary }) => {
   const styles = useStyles();
 
   const { register, handleSubmit } = useForm<NewShipmentInput>();
@@ -139,6 +140,15 @@ const ShipmentForm: FC<Props> = ({ onSubmit }) => {
         <Grid item>
           <Button variant="contained" type="submit" className={styles.button}>
             Crear envío
+          </Button>
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            className={styles.button}
+            onClick={onClickSecondary}
+          >
+            Ver envios creados
           </Button>
         </Grid>
       </Grid>
