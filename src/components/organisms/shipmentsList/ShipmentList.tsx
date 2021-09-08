@@ -2,12 +2,12 @@ import { FC } from "react";
 import { createStyles, Grid, makeStyles, Theme } from "@material-ui/core";
 
 import ShipmentItem from "../shipmentItem/ShipmentItem";
+import CustomSlider from "../../molecules/customSlider/CustomSlider";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       overflow: "hidden",
-      backgroundColor: theme.palette.secondary.main,
     },
     gridStyle: {
       width: "auto",
@@ -65,29 +65,73 @@ const sortShipments = (shipments: Array<ShipmentRate>) => {
   return shipments;
 };
 
+const shipmentsRanges = (shipments: Array<ShipmentRate>) => {
+  const ranges = {
+    maxPrice: 0,
+    minPrice: 0,
+    minDays: 0,
+    maxDays: 0,
+  };
+
+  shipments.forEach(({ attributes }) => {
+    const price = parseInt(attributes.total_pricing || "0");
+    const days = attributes.days || 0;
+
+    price > ranges.maxPrice && (ranges.maxPrice = price);
+    price < ranges.minPrice && (ranges.minPrice = price);
+
+    days > ranges.maxDays && (ranges.maxDays = days);
+    days < ranges.minDays && (ranges.minDays = days);
+  });
+
+  return ranges;
+};
+
 const ShipmentList: FC<Props> = ({ shipments }) => {
   const styles = useStyles();
+
+  const { maxPrice, minPrice, maxDays, minDays } = shipmentsRanges(shipments);
+
   return (
     <div className={styles.container}>
-      <Grid
-        container
-        spacing={5}
-        justifyContent="center"
-        className={styles.gridStyle}
-      >
-        {shipments.length > 0 &&
-          sortShipments(shipments).map(({ attributes, id }, index) => (
-            <Grid item lg={4}>
-              <ShipmentItem
-                key={id}
-                id={parseInt(id)}
-                serviceName={attributes.service_level_name || ""}
-                days={attributes.days || 0}
-                total={attributes.total_pricing || ""}
-                variant={index === 0 ? "important" : "normal"}
-              />
-            </Grid>
-          ))}
+      <Grid container direction="column" justifyContent="center">
+        <Grid item>
+          <CustomSlider
+            min={minPrice}
+            max={maxPrice}
+            label="Rando de precios"
+            onChange={() => {}}
+          />
+        </Grid>
+        <Grid item>
+          <CustomSlider
+            min={minDays}
+            max={maxDays}
+            label="Rando de dias de entrega"
+            onChange={() => {}}
+          />
+        </Grid>
+        <Grid item>
+          <Grid
+            container
+            spacing={5}
+            justifyContent="center"
+            className={styles.gridStyle}
+          >
+            {shipments.length > 0 &&
+              sortShipments(shipments).map(({ attributes, id }, index) => (
+                <Grid item lg={4} key={id}>
+                  <ShipmentItem
+                    id={parseInt(id)}
+                    serviceName={attributes.service_level_name || ""}
+                    days={attributes.days || 0}
+                    total={attributes.total_pricing || ""}
+                    variant={index === 0 ? "important" : "normal"}
+                  />
+                </Grid>
+              ))}
+          </Grid>
+        </Grid>
       </Grid>
     </div>
   );
