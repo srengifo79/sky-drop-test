@@ -63,7 +63,13 @@ const LabelItem: FC<Props> = ({
               </Typography>
             </Grid>
             <Grid item>
-              <Link to={labelUrl} className={styles.link}>
+              <Link
+                to=""
+                className={styles.link}
+                onClick={() => {
+                  window.location.href = labelUrl;
+                }}
+              >
                 Guia PDF
               </Link>
             </Grid>
