@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { createStyles, Grid, makeStyles, Theme } from "@material-ui/core";
 
 import ShipmentItem from "../shipmentItem/ShipmentItem";
@@ -88,9 +88,20 @@ const shipmentsRanges = (shipments: Array<ShipmentRate>) => {
 };
 
 const ShipmentList: FC<Props> = ({ shipments }) => {
+  const { maxPrice, minPrice, maxDays, minDays } = shipmentsRanges(shipments);
+
+  const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
+  const [daysRange, setDaysRange] = useState([minDays, maxDays]);
+
   const styles = useStyles();
 
-  const { maxPrice, minPrice, maxDays, minDays } = shipmentsRanges(shipments);
+  const hanldePriceRangeChange = (start: number, end: number) => {
+    setPriceRange([start, end]);
+  };
+
+  const hanldeDaysRangeChange = (start: number, end: number) => {
+    setDaysRange([start, end]);
+  };
 
   return (
     <div className={styles.container}>
@@ -100,7 +111,7 @@ const ShipmentList: FC<Props> = ({ shipments }) => {
             min={minPrice}
             max={maxPrice}
             label="Rando de precios"
-            onChange={() => {}}
+            onChange={hanldePriceRangeChange}
           />
         </Grid>
         <Grid item>
@@ -108,7 +119,7 @@ const ShipmentList: FC<Props> = ({ shipments }) => {
             min={minDays}
             max={maxDays}
             label="Rando de dias de entrega"
-            onChange={() => {}}
+            onChange={hanldeDaysRangeChange}
           />
         </Grid>
         <Grid item>
@@ -119,17 +130,29 @@ const ShipmentList: FC<Props> = ({ shipments }) => {
             className={styles.gridStyle}
           >
             {shipments.length > 0 &&
-              sortShipments(shipments).map(({ attributes, id }, index) => (
-                <Grid item lg={4} key={id}>
-                  <ShipmentItem
-                    id={parseInt(id)}
-                    serviceName={attributes.service_level_name || ""}
-                    days={attributes.days || 0}
-                    total={attributes.total_pricing || ""}
-                    variant={index === 0 ? "important" : "normal"}
-                  />
-                </Grid>
-              ))}
+              sortShipments(shipments)
+                .filter(({ attributes }) => {
+                  const price = parseInt(attributes.total_pricing || "0");
+                  const days = attributes.days || 0;
+
+                  return (
+                    priceRange[0] <= price &&
+                    priceRange[1] >= price &&
+                    daysRange[0] <= days &&
+                    daysRange[1] >= days
+                  );
+                })
+                .map(({ attributes, id }, index) => (
+                  <Grid item lg={4} key={id}>
+                    <ShipmentItem
+                      id={parseInt(id)}
+                      serviceName={attributes.service_level_name || ""}
+                      days={attributes.days || 0}
+                      total={attributes.total_pricing || ""}
+                      variant={index === 0 ? "important" : "normal"}
+                    />
+                  </Grid>
+                ))}
           </Grid>
         </Grid>
       </Grid>
