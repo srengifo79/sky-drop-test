@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import {
   Grid,
   makeStyles,
@@ -43,6 +43,10 @@ const CustomSlider: FC<Props> = ({ min, max, label, onChange }) => {
     const endValue = (newValue as number[])[1];
     onChange(startValue, endValue);
   };
+
+  useEffect(() => {
+    setValue([min, max]);
+  }, [min, max]);
 
   return (
     <div>

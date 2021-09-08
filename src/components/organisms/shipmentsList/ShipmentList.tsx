@@ -109,7 +109,7 @@ const ShipmentList: FC<Props> = ({ shipments }) => {
   useEffect(() => {
     setPriceRange([minPrice, maxPrice]);
     setDaysRange([minDays, maxDays]);
-  }, [shipments]);
+  }, [maxDays, maxPrice, minDays, minPrice]);
 
   return (
     <div className={styles.container}>
